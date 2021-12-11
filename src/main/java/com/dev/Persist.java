@@ -33,8 +33,9 @@ public class Persist {
             preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                token = resultSet.getString("token");
+                 token = resultSet.getString("token");;
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -92,11 +93,11 @@ public class Persist {
         boolean success = false;
         try {
             PreparedStatement preparedStatement = this.connection.prepareStatement
-                    ("INSERT INTO users (username, password, token) VALUE (?, ?, ?)");
+                    ("INSERT INTO users (username, password, token,blocked) VALUE (?, ?, ?,0)");
             preparedStatement.setString(1, userObject.getUsername());
             preparedStatement.setString(2, userObject.getPassword());
             preparedStatement.setString(3, userObject.getToken());
-            //preparedStatement.setBoolean(4, userObject.getIsBlocked());
+            //preparedStatement.setInt(4, userObject.getIsBlocked());
             preparedStatement.executeUpdate();
             success = true;
         } catch (SQLException e) {
@@ -134,29 +135,21 @@ public class Persist {
 
 
     public List<MessageObject> getMessagesByUser (String token) {
+        String username = getUsernameByToken(token);
         List<MessageObject> messageObjects = new ArrayList<>();
         try {
-            String username = getUsernameByToken(token);
             if (username != null) {
                 PreparedStatement preparedStatement = this.connection.prepareStatement
-                        ("SELECT (title,content,id_sender,reading_date)" +
-                                " FROM messages WHERE id_receiver = ? ORDER BY send_date DESC");
+                        ("SELECT * FROM messages WHERE id_receiver = ? ORDER BY send_date DESC");
                 preparedStatement.setString(1, username);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     MessageObject messageObject = new MessageObject();
 
-                    String title = resultSet.getString("title");
-                    String content = resultSet.getString("content");
-                    int sender = resultSet.getInt("id_sender");
-                    boolean read = resultSet.getBoolean("reading_date");
-
-                    messageObject.setMessageId(resultSet.getInt("id"));
-
-                    messageObject.setTitle(title);
-                    messageObject.setContent(content);
-                    messageObject.setSenderId(sender);
-                    messageObject.setIsRead(read);
+                    messageObject.setTitle(resultSet.getString("title"));
+                    messageObject.setContent(resultSet.getString("content"));
+                    messageObject.setSenderId(resultSet.getInt("id_sender"));
+                    messageObject.setIsRead(resultSet.getBoolean("reading_date"));
 
                     messageObjects.add(messageObject);
 
@@ -174,7 +167,7 @@ public class Persist {
             String username = getUsernameByToken(token);
             if (username != null) {
                 PreparedStatement preparedStatement = this.connection.prepareStatement
-                        ("DELETE FROM messages WHERE message_id = ?  ");
+                        ("DELETE FROM messages WHERE message_id = ? ");
                 preparedStatement.setInt(1, MessageId);
                 preparedStatement.executeUpdate();
                 success = true;
@@ -203,4 +196,17 @@ public class Persist {
         return read;
 
     }
+
+    public void test(String username) {
+        try {
+            PreparedStatement preparedStatement = this.connection.prepareStatement
+                ("UPDATE users SET blocked = blocked +1 WHERE username = ?");
+            preparedStatement.setString(1,username );
+            preparedStatement.executeUpdate();
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -7,7 +7,7 @@ public class UserObject {
     private String password;
     private String token;
     private List<MessageObject> messages;
-    private boolean blocked = false;
+    private int blocked;
 
     public String getUsername() {
         return username;
@@ -33,7 +33,7 @@ public class UserObject {
         this.token = token;
     }
 
-    public boolean getIsBlocked() {return blocked;}
+    public int getIsBlocked() {return blocked;}
 
     public void setIsBlocked() { this.blocked = blocked;}
 

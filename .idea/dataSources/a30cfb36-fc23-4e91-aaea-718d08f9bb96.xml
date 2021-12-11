@@ -1134,7 +1134,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
     </column>
     <column id="322" parent="288" name="blocked">
       <Position>5</Position>
-      <DataType>tinyint(1)|0s</DataType>
+      <DataType>int|0s</DataType>
     </column>
     <index id="323" parent="288" name="users_id_uindex">
       <ColNames>id</ColNames>
