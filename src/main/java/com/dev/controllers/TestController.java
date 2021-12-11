@@ -53,19 +53,24 @@ public class TestController {
 
 
     @RequestMapping("add-message")
-    public boolean addMessage (String token, int senderUsername,int receiverUsername, String title, String content) {
-        return persist.addMessage(token,senderUsername, receiverUsername,title,content);
+    public boolean addMessage (String token,String receiverUsername, String title, String content) {
+        return persist.addMessage(token,receiverUsername,title,content);
     }
 
 
     @RequestMapping("get-messages")
-    public List<MessageObject> getPosts (String token) {
+    public List<MessageObject> getMessage (String token) {
         return persist.getMessagesByUser(token);
     }
 
     @RequestMapping("remove-message")
-    public boolean removePost (String token, int messageId) {
+    public boolean removeMessage (String token, int messageId) {
         return persist.removeMessage(token, messageId);
+    }
+
+    @RequestMapping("read-message")
+    public boolean readMessage (String token, int messageId) {
+        return persist.readMessage(token, messageId);
     }
 
 

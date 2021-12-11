@@ -4,8 +4,8 @@ import java.util.Date;
 
 public class MessageObject {
 
-    private int senderUsername;
-    private int receiverUsername;
+    private int SenderId;
+    private String receiverUsername;
     private String title;
     private String content;
     private boolean isRead;
@@ -22,8 +22,8 @@ public class MessageObject {
     public boolean getIsRead() {return isRead;}
     public void setIsRead(boolean read) {isRead = read;}
 
-    public int getSenderUsername() {return senderUsername;}
-    public void setSenderUsername(int senderUsername) {this.senderUsername = senderUsername;}
+    public int getSenderId() {return SenderId;}
+    public void setSenderId(int senderId) {this.SenderId = SenderId;}
 
     public String getTitle() {return title;}
     public void setTitle(String title) {this.title = title;}
@@ -35,6 +35,6 @@ public class MessageObject {
         this.content = content;
     }
 
-    public int getReceiverUsername() {return receiverUsername;}
-    public void setReceiverUsername(int receiverUsername) {this.receiverUsername = receiverUsername;}
+    public String getReceiverUsername() {return receiverUsername;}
+    public void setReceiverUsername(String receiverUsername) {this.receiverUsername = receiverUsername;}
 }
