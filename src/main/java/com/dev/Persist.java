@@ -24,6 +24,7 @@ public class Persist {
         }
     }
 
+    // return users token by username and password:
     public String getTokenByUsernameAndPassword(String username, String password) {
         String token = null;
         try {
@@ -41,8 +42,9 @@ public class Persist {
             e.printStackTrace();
         }
         return token;
-    }
+    }// end of getTokenByUsernameAndPassword
 
+    // return users token by username:
     public String getTokenByUsername(String username) {
         String token = null;
         try {
@@ -57,8 +59,9 @@ public class Persist {
             e.printStackTrace();
         }
         return token;
-    }
+    }//end of getTokenByUsername
 
+    // return username  by token:
     public String getUsernameByToken(String token) {
         String username = null;
         try {
@@ -74,8 +77,9 @@ public class Persist {
         }
         return username;
 
-    }
+    }//end of getUsernameByToken
 
+    // return users id from users table by his token:
     public Integer getUserIdByToken(String token) {
         Integer id = null;
         try {
@@ -91,8 +95,9 @@ public class Persist {
         }
         return id;
 
-    }
+    }//end of getUserIdByToken
 
+    // creating account:
     public boolean addAccount(UserObject userObject) {
         boolean success = false;
         try {
@@ -109,44 +114,62 @@ public class Persist {
         }
         return success;
 
-    }
+    }//end of addAccount
+
+    //validate username and password and signs in if it's ok:
     public String signIn(String username, String password) {
         String token = null;
+        //if there is no such username :
         if (getTokenByUsername(username) == null) {
             token =  "wrongUserName";
-        } else {
-
-            if (!checkPassword(username, password)) {
-                int counter = checkBlockCount(username);
-                while (counter < 5){
+        }
+        else {
+            // else if there is such username :
+            if (!checkPassword(username, password))
+            {
+                //if the password wrong:
+                while (checkBlockCount(username) < 5){
                     addBlockCount(username);
-                    return "wrongPassword";
+                    token = "wrongPassword";
                 }
-                return "userLocked";
+                //after 5 incorrect login attempts the user will be blocked:
+                token = "userLocked";
 
-            } else/* (checkPassword(username, password) && (checkBlockCount(username) < 5))*/ {
-                token = getTokenByUsernameAndPassword(username, password);
+            }
+            else {
+                // if such user exist log him in:
+                if(checkBlockCount(username) < 5) {
+                    token = getTokenByUsernameAndPassword(username, password);
+                }else {
+                    token = "userLocked";
+                }
             }
         }
         return token;
 
-    }
+    }//end of signIn
+
+    //check if the password exists in data:
     public boolean checkPassword(String username, String password) {
         boolean truePassword = false;
         try {
             PreparedStatement preparedStatement = this.connection.prepareStatement
-                    ("SELECT password FROM users WHERE username =?");
+                    ("SELECT password FROM users WHERE username = ?");
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 if (resultSet.getString("password").equals(password))
                     truePassword = true;
             }
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
+
         return truePassword;
-    }
+    } // end of checkPassword
+
+    //adding another wrong sign in attempts :
     public void addBlockCount(String username) {
         try {
             PreparedStatement preparedStatement = this.connection.prepareStatement
@@ -157,12 +180,14 @@ public class Persist {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
+    }//end of addBlockCount
+
+    //check the number of wrong sign in attempts:
     public int checkBlockCount(String username) {
         int wrongTries = 0;
         try {
             PreparedStatement preparedStatement = this.connection.prepareStatement
-                    ("SELECT blocked FROM users username = ?");
+                    ("SELECT blocked FROM users WHERE username = ?");
             preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -173,8 +198,9 @@ public class Persist {
         }
         return wrongTries;
 
-    }
+    }//end of checkBlockCount
 
+    //creating new message:
     public boolean addMessage(String token, String receiverUsername, String title, String content) {
         boolean success = false;
         try {
@@ -197,9 +223,9 @@ public class Persist {
             e.printStackTrace();
         }
         return success;
-    }
+    }// end of addMessage
 
-
+    //create list of users messages:
     public List<MessageObject> getMessagesByUser(String token) {
         String username = getUsernameByToken(token);
         List<MessageObject> messageObjects = new ArrayList<>();
@@ -224,8 +250,9 @@ public class Persist {
             e.printStackTrace();
         }
         return messageObjects;
-    }
+    }//end of getMessagesByUser
 
+    // deletes message:
     public boolean removeMessage(int messageId) {
         boolean success = false;
         try {
@@ -239,8 +266,9 @@ public class Persist {
             e.printStackTrace();
         }
         return success;
-    }
+    }//end of removeMessage
 
+    //mark a message as read:
     public boolean readMessage(int messageId) {
         boolean read = false;
         try{
@@ -256,7 +284,6 @@ public class Persist {
         }
         return read;
 
-    }
-
+    }//end of readMessage
 
 }
