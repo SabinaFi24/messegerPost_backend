@@ -113,7 +113,6 @@ public class Persist {
             e.printStackTrace();
         }
         return success;
-
     }//end of addAccount
 
     //validate username and password and signs in if it's ok:
@@ -131,6 +130,7 @@ public class Persist {
                 while (checkBlockCount(username) < 5){
                     addBlockCount(username);
                     token = "wrongPassword";
+                    return token;
                 }
                 //after 5 incorrect login attempts the user will be blocked:
                 token = "userLocked";
@@ -146,7 +146,6 @@ public class Persist {
             }
         }
         return token;
-
     }//end of signIn
 
     //check if the password exists in data:
@@ -258,11 +257,12 @@ public class Persist {
         try {
                 PreparedStatement preparedStatement = this.connection.prepareStatement(
                         "DELETE FROM messages  WHERE message_id = ? ");
-                preparedStatement.setInt(1, messageId);
-                preparedStatement.executeUpdate();
-                success = true;
+                         preparedStatement.setInt(1, messageId);
+                         preparedStatement.executeUpdate();
+                         success = true;
 
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
         return success;
@@ -273,7 +273,7 @@ public class Persist {
         boolean read = false;
         try{
             PreparedStatement preparedStatement = this.connection.prepareStatement(
-                    "UPDATE messages SET reading_date = 1 WHERE id = ?");
+                    "UPDATE messages SET reading_date = reading_date+1 WHERE message_id = ?");
             preparedStatement.setInt(1, messageId);
             preparedStatement.executeUpdate();
             read = true;
@@ -286,4 +286,17 @@ public class Persist {
 
     }//end of readMessage
 
+    public boolean doesUserExist(String username) {
+        try {
+            PreparedStatement preparedStatement = this.connection.prepareStatement
+                    ("SELECT * FROM users WHERE username = ?");
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

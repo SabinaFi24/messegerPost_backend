@@ -38,8 +38,7 @@ public class TestController {
     @RequestMapping("create-account")
     public boolean createAccount (String username, String password) {
         boolean success = false;
-        boolean alreadyExists = persist.getTokenByUsernameAndPassword(username, password) != null;
-        if (!alreadyExists) {
+        if (!persist.doesUserExist(username)) {
             UserObject userObject = new UserObject();
             userObject.setUsername(username);
             userObject.setPassword(password);
@@ -49,6 +48,10 @@ public class TestController {
         }
 
         return success;
+    }
+    @RequestMapping("doesUserExist")
+    public boolean doesUserExist(String username){
+        return persist.doesUserExist(username);
     }
 
 
@@ -70,6 +73,7 @@ public class TestController {
 
     @RequestMapping("read-message")
     public boolean readMessage (int messageId) {return persist.readMessage(messageId);}
+
 
 
 
