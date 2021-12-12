@@ -31,24 +31,9 @@ public class TestController {
 
     @RequestMapping("sign-in")
     public String signIn (String username, String password) {
-        String result = null;
-        if (persist.getTokenByUsername(username)==null){
-            result = "1";
-        }else{
-            if (persist.getTokenByUsernameAndPassword(username, password)==null){
-                persist.test(username);
-                result = "2";
+        return persist.signIn(username,password);
 
-            }else{
-                result = persist.getTokenByUsernameAndPassword(username, password);
-            }
-        }
-
-        return result;
     }
-
-
-
 
     @RequestMapping("create-account")
     public boolean createAccount (String username, String password) {
@@ -79,14 +64,12 @@ public class TestController {
     }
 
     @RequestMapping("remove-message")
-    public boolean removeMessage (String token, int messageId) {
-        return persist.removeMessage(token, messageId);
+    public boolean removeMessage (int messageId) {
+        return persist.removeMessage(messageId);
     }
 
     @RequestMapping("read-message")
-    public boolean readMessage (String token, int messageId) {
-        return persist.readMessage(token, messageId);
-    }
+    public boolean readMessage (int messageId) {return persist.readMessage(messageId);}
 
 
 
