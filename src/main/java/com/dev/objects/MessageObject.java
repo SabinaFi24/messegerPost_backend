@@ -8,7 +8,7 @@ public class MessageObject {
     private String receiverUsername;
     private String title;
     private String content;
-    private boolean isRead;
+    private int isRead;
     private int messageId;
     private Date sendDate;
 
@@ -17,10 +17,10 @@ public class MessageObject {
     public void setSendDate(Date sendDate) {this.sendDate = sendDate;}
 
     public int getMessageId() {return messageId;}
-    public void setMessageId(int messageId) {messageId = messageId;}
+    public void setMessageId(int messageId) {this.messageId = messageId;}
 
-    public boolean getIsRead() {return isRead;}
-    public void setIsRead(boolean read) {isRead = read;}
+    public int getIsRead() {return isRead;}
+    public void setIsRead(int read) {isRead = read;}
 
     public int getSenderId() {return senderId;}
     public void setSenderId(int senderId) {this.senderId = senderId;}

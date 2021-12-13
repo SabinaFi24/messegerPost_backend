@@ -235,14 +235,12 @@ public class Persist {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 MessageObject messageObject = new MessageObject();
-
+                messageObject.setMessageId(resultSet.getInt("message_id"));
                 messageObject.setTitle(resultSet.getString("title"));
                 messageObject.setContent(resultSet.getString("content"));
                 messageObject.setSenderId(resultSet.getInt("id_sender"));
-                messageObject.setIsRead(resultSet.getBoolean("reading_date"));
-
+                messageObject.setIsRead(resultSet.getInt("reading_date"));
                 messageObjects.add(messageObject);
-
             }
 
         } catch (SQLException e) {
